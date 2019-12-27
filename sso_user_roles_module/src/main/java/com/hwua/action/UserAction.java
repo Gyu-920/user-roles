@@ -2,32 +2,36 @@ package com.hwua.action;
 
 import com.hwua.domain.User;
 import com.hwua.service.UserService;
-import com.hwua.util.ResponseData;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.subject.Subject;
+import com.hwua.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class UserAction {
+    @Autowired
+    private RedisUtil redisUtil;
     @PostMapping("/user/login")
-    public ResponseData login(@RequestBody User user){
-        //获取当前对象
-        Subject subject = SecurityUtils.getSubject();
-        //构建UsernamePasswordToken对象
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(user.getUsername(),user.getPassword());
-        //执行登录
-        subject.login(usernamePasswordToken);
+    public ResponseData login(@RequestBody User user)throws Exception{
+        //拆解用户名
+        String username = user.getUsername();
+        //连接服务器校验
+        User resultUser = userService.getUserByUsername(username);
+        String password = user.getPassword();
+        //比对信息
+        if (resultUser==null||!(PasswordUtil.checkPassword(password,resultUser.getPassword(),username,1))){
+            throw new Exception("用户名或密码错误!!!");
+        }
+        //构建返回对象,除此之外的错误对象交给全局处理异常处理
         ResponseData<User> userResponseData = new ResponseData<>();
-        userResponseData.setCode(200);
-        userResponseData.setMessage("login success");
+        userResponseData.setCode(0);
         userResponseData.setT(user);
+        userResponseData.setMessage("login success");
+        String token = JWTUtil.createToken(username, password);
+        userResponseData.setAccessToken(token);
+        redisUtil.addToken(username,token);
+        //System.out.println(redisUtil.getToken(username));
         return userResponseData;
     }
     @Autowired
@@ -37,12 +41,17 @@ public class UserAction {
     //指定权限
 //    @RequiresPermissions("pwd")
     @PutMapping("/users/user/pwd")
-    public void pwd(String oldPwd,String newPwd,String rePass) throws Exception{
-        System.out.println(oldPwd+"   "+newPwd+"   "+rePass);
+    public ResponseData pwd(@RequestBody String oldPwd,String newPwd, HttpServletRequest req) throws Exception{
+        ResponseData responseData = new ResponseData();
+        String authorization = req.getParameter("authorization");
+        String username = JWTUtil.decodeToken(authorization);
+        System.out.println(username);
+        User ResultUsername = userService.getUserByUsername(username);
+        if (ResultUsername.getUsername().equals(oldPwd)) {
+            userService.updatePassWord(username,newPwd);
+        } else {
+            return responseData.setMessage("密码错误");
+        }
+        return responseData.setCode(200).setMessage("成功获得信息！");
     }
-//    public ResponseData updatePassWorld(String username,String password) throws Exception{
-//
-//        userService.updatePassWord(username,password);
-//        return new ResponseData();
-//    }
 }

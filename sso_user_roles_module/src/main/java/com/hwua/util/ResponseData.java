@@ -18,4 +18,6 @@ public class ResponseData <T> {
     private T t;
     //详细的错误描述信息
     private String message;
+    private  String accessToken;
+    private  String refreshToken;
 }

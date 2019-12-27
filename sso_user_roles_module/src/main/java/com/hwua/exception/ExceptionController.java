@@ -13,6 +13,9 @@ public class ExceptionController {
     @Autowired
     private ResponseData responseData;
 
+    public ExceptionController() {
+    }
+
     //处理全局异常的方法
     @ExceptionHandler(Exception.class)
     public ResponseData handlerException(Exception e){

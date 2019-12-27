@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper {
     @Select("select * from user where username = #{username}")
-    User selectByUsername(User user);
+    User selectByUsername(String username);
     @Update("update user set password=#{password} where user =#{username};")
     int updateByUsername(String username,String password );
 

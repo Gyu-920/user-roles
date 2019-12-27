@@ -5,6 +5,7 @@ import com.hwua.domain.Role;
 import com.hwua.domain.User;
 import com.hwua.mapper.UserMapper;
 import com.hwua.service.UserService;
+import com.hwua.util.JWTToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -54,7 +55,7 @@ public class MyRealm extends AuthorizingRealm {
 
     @Override
     public boolean supports(AuthenticationToken token) {
-        return super.supports(token);
+        return token instanceof JWTToken;
     }
 
     @Override
@@ -66,9 +67,7 @@ public class MyRealm extends AuthorizingRealm {
         //根据用户名查询
         User user = null;
         try{
-            User paramUser = new User();
-            paramUser.setUsername(username);
-            user = userService.getUserByUsername(paramUser);
+            user = userService.getUserByUsername(username);
             //判断对象是否为空
             if (user!=null){
                 ByteSource bytes = ByteSource.Util.bytes(username);
