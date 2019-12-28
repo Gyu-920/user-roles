@@ -90,7 +90,6 @@
                 form.render(); //更新全部
             }
         },"GET",false);
-
         //监听提交
         form.on('submit(submit)', function(data){
             CoreUtil.sendAjax("/user/info",JSON.stringify(data.field),function (res) {

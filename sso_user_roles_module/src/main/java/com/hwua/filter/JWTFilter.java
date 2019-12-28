@@ -65,6 +65,15 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         getSubject(request, response).login(JwtToken);
         return true;
     }
+    public static String getToken(ServletRequest request)throws Exception{
+        HttpServletRequest req = (HttpServletRequest) request;
+        //获取请求消息头信息或者路径信息    获取token
+        String token = req.getHeader("authorization");
+        if (token==null||token.trim()==""){
+            token = req.getParameter("authorization");
+        }
+        return token;
+    }
 
 //    @Override
 //    protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {

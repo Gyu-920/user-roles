@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper {
     @Select("select * from user where username = #{username}")
     User selectByUsername(String username);
-    @Update("update user set password=#{password} where user =#{username};")
+    @Update("update user set password=#{password} where username =#{username}")
     int updateByUsername(String username,String password );
 
     long countByExample(UserExample example);
@@ -42,4 +42,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     User selectUserInfoByUsername(String username);
+    @Update("update user set real_name=#{realName},phone=#{phone},email=#{email},status=#{status},sex=#{sex} where username =#{username}")
+    void updateUserInfo(String username, String realName, String phone, String email, Integer status, Integer sex);
 }

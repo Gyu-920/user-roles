@@ -28,4 +28,9 @@ public class UserServiceImpl implements UserService {
     public void updatePassWord(String username, String password) {
         userMapper.updateByUsername(username,password);
     }
+
+    @Override
+    public void updateUserInfo(String username, String realName, String phone, String email, Integer status, Integer sex) {
+        userMapper.updateUserInfo(username,  realName, phone,  email, status, sex);
+    }
 }

@@ -9,4 +9,5 @@ public interface UserService  {
     //根据用户名查询用户权限
     User getUserInfoByUsername(String username);
     void updatePassWord(String username,String password);
+    void updateUserInfo(String username,String realName,String phone,String email,Integer status,Integer sex);
 }
