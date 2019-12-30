@@ -17,4 +17,7 @@ public class RedisUtil {
         String password = redisTemplate.opsForValue().get(token);
         return password;
     }
+    public void deleteToken(String username){
+       redisTemplate.delete(username);
+    }
 }

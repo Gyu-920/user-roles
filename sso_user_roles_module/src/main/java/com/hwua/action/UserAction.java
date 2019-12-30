@@ -5,8 +5,11 @@ import com.hwua.domain.User;
 import com.hwua.filter.JWTFilter;
 import com.hwua.service.UserService;
 import com.hwua.util.*;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +53,7 @@ public class UserAction {
         String oldPwd = json.getString("oldPwd");
         User ResultUser = userService.getUserByUsername(username);
         if (ResultUser==null||!(PasswordUtil.checkPassword(oldPwd,ResultUser.getPassword(),username,1))) {
-            return responseData.setMessage("密码错误");
+            return responseData.setMessage("密码输入错误");
         } else {
             Md5Hash md5Hash = new Md5Hash(newPwd,username,1);
             String password = md5Hash.toString();
@@ -95,8 +98,18 @@ public class UserAction {
         return responseData.setCode(0).setMessage("保存成功！");
     }
     @GetMapping("/user/logout")
-    public ResponseData loginOut()throws Exception{
+    public ResponseData loginOut(HttpServletRequest req)throws Exception{
         ResponseData responseData = new ResponseData();
-        return responseData;
+        String token = JWTFilter.getToken(req);
+        if (token==null||token.equals("")){
+            throw new Exception("token不存在");
+        }
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            subject.logout();
+            String username = JWTUtil.decodeToken(token);
+            redisUtil.deleteToken(username);
+        }
+        return responseData.setCode(0).setMessage("退出成功");
     }
 }

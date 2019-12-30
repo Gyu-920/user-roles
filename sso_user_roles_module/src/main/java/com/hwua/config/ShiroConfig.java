@@ -29,7 +29,7 @@ public class ShiroConfig {
         //登录界面
         shiroFilterFactoryBean.setLoginUrl("/login.html");
         //成功之后的界面
-        shiroFilterFactoryBean.setSuccessUrl("/home.html");
+//        shiroFilterFactoryBean.setSuccessUrl("/home.html");
         shiroFilterFactoryBean.setUnauthorizedUrl("/error/500.html");
         //不需要认证就可以访问的页面
        shiroFilterFactoryBean.setUnauthorizedUrl("/main.html");

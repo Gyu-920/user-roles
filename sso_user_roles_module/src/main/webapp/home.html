@@ -144,10 +144,10 @@
     var logoutDialog=function () {
         layer.open({
             content: '确定要退出登录么？',
-            yes: function(index, layero){
-                layer.close(index); //如果设定了yes回调，需进行手工关闭
+            yes: function(user, layero){
+                layer.close(user); //如果设定了yes回调，需进行手工关闭
                 CoreUtil.sendAjax("/user/logout",null,function (res) {
-                    top.window.location.href="/index/login";
+                    top.window.location.href="/login.html";
                 },"GET",true);
             }
         });

@@ -29,7 +29,7 @@ var CoreUtil = (function () {
                 if (typeof ft == "function") {
                     if(res.code==401001){ //凭证过期重新登录
                         layer.msg("凭证过期请重新登录")
-                        top.window.location.href="/index/login"
+                        top.window.location.href="/user/login"
                     }else if(res.code==401002){  //根据后端提示刷新token
                         /*记录要重复刷新的参数*/
                         var reUrl=url;
@@ -48,7 +48,7 @@ var CoreUtil = (function () {
                                 CoreUtil.sendAjax(reUrl,reParams,reFt,reMethod,reHeaders,reNoAuthorityFt,reContentType,reAsync);
                             }else {
                                 layer.msg("凭证过期请重新登录");
-                                top.window.location.href="/index/login"
+                                top.window.location.href="/user/login"
                             }
                         },"GET",true)
                     }else if(res.code==0) {

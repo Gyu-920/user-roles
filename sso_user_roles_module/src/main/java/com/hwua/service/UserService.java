@@ -10,4 +10,5 @@ public interface UserService  {
     User getUserInfoByUsername(String username);
     void updatePassWord(String username,String password);
     void updateUserInfo(String username,String realName,String phone,String email,Integer status,Integer sex);
+
 }

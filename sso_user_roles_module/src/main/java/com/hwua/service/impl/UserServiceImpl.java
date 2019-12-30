@@ -5,6 +5,7 @@ import com.hwua.mapper.UserMapper;
 import com.hwua.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,4 +34,5 @@ public class UserServiceImpl implements UserService {
     public void updateUserInfo(String username, String realName, String phone, String email, Integer status, Integer sex) {
         userMapper.updateUserInfo(username,  realName, phone,  email, status, sex);
     }
+
 }
