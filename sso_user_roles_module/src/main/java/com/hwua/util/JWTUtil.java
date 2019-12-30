@@ -33,7 +33,7 @@ public class JWTUtil {
     }
     //解码token
     public static String decodeToken(String token) throws Exception {
-        System.out.println(token);
+        //System.out.println(token);
         //构建解码器
         DecodedJWT decode = JWT.decode(token);
         //获取有效负载里面的数据

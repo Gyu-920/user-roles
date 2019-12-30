@@ -3,7 +3,6 @@ package com.hwua.config;
 import com.hwua.domain.Permission;
 import com.hwua.domain.Role;
 import com.hwua.domain.User;
-import com.hwua.mapper.UserMapper;
 import com.hwua.service.UserService;
 import com.hwua.util.JWTToken;
 import org.apache.shiro.SecurityUtils;
@@ -17,7 +16,6 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Iterator;
-import java.util.Random;
 import java.util.Set;
 
 public class MyRealm extends AuthorizingRealm {

@@ -55,11 +55,22 @@ public class UserAction {
             Md5Hash md5Hash = new Md5Hash(newPwd,username,1);
             String password = md5Hash.toString();
             userService.updatePassWord(username,password);
+            redisUtil.addToken(username,token);
+//            System.out.println(redisUtil.getToken(username));
         }
-        return responseData.setCode(200).setMessage("成功修改密码！").setAccessToken(token);
+        return responseData.setCode(0).setMessage("成功修改密码！").setAccessToken(token);
+    }
+    @PostMapping("/users")
+    public ResponseData select(@RequestBody String msg,HttpServletRequest req)throws Exception{
+        ResponseData responseData = new ResponseData();
+        String token = JWTFilter.getToken(req);
+        String username = JWTUtil.decodeToken(token);
+        return responseData;
     }
     @PutMapping("/user/info")
     public ResponseData msg(@RequestBody String info,HttpServletRequest req)throws Exception{
+        String token = JWTFilter.getToken(req);
+        String tokenUsername = JWTUtil.decodeToken(token);
         ResponseData responseData = new ResponseData();
         JSONObject json = JSONObject.parseObject(info);
         //{"id":"","username":"zhangsan","realName":"张三","phone":"15098810033","email":"hehe@qq.com","status":"on","sex":"1"}
@@ -70,8 +81,8 @@ public class UserAction {
         String getStatus = json.getString("status");
         int sex = Integer.parseInt(json.getString("sex"));
         User ResultUser = userService.getUserByUsername(username);
-        if (ResultUser==null){
-            return responseData.setMessage("账号不存在");
+        if (ResultUser==null||!username.equals(tokenUsername)){
+            return responseData.setMessage("请输入正确的用户名");
         }else{
             if (getStatus.equals("on")){
                 int status=1;
@@ -81,10 +92,11 @@ public class UserAction {
                 userService.updateUserInfo(username,realName,phone,email,status,sex);
             }
         }
-        return responseData.setCode(200).setMessage("保存成功！");
+        return responseData.setCode(0).setMessage("保存成功！");
     }
-    @PostMapping("/user/roles/{userId}")
-    public User getUserByUsername(String username) throws Exception{
-        return userService.getUserInfoByUsername(username);
+    @GetMapping("/user/logout")
+    public ResponseData loginOut()throws Exception{
+        ResponseData responseData = new ResponseData();
+        return responseData;
     }
 }
